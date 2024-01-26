@@ -9,32 +9,23 @@ const Counter = (props) => {
 
     const CartContext = useContext(cartDataContext)
     const addHandler = () => {
-        
         CartContext.addItemHandler(props.meal);
-        props.setAmount((preAmount) => {
-            return preAmount + 1;
-        })
     }
 
     const subHandler = () => {
         CartContext.subItemHandler(props.meal);
-        props.setAmount((preAmount) => {
-            return preAmount - 1;
-        }
-        )
     }
-
 
     return (
         <div className={classes.Counter}>
 
             {
-                (props.amount && props.amount !== 0) ? (
+                (props.meal.amount && props.meal.amount !== 0) ? (
                     <>
                         <button onClick={subHandler} className={classes.Sub}>
                             <FontAwesomeIcon icon={faMinus} />
                         </button>
-                        <span className={classes.count}>{props.amount}</span>
+                        <span className={classes.count}>{props.meal.amount}</span>
                     </>
                 ) : null
             }

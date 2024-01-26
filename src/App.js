@@ -1,6 +1,9 @@
 import { useState } from "react";
 import Meals from "./components/Meals/Meals";
 import cartDataContext from './store/Context'
+import MealFilterBar from "./components/MealFilterBar/MealFilterBar";
+import Cart from "./components/Cart/Cart";
+
 // 模拟一组食物数据
 const MEALS_DATA = [
   {
@@ -51,7 +54,6 @@ const MEALS_DATA = [
 ];
 
 
-
 function App() {
 
   const [cartData, setCartData] = useState({
@@ -72,9 +74,6 @@ function App() {
     updatedCartData.totalPrice += meal.price;
 
     setCartData(updatedCartData)
-
-    console.log(updatedCartData);
-    console.log(cartData);
   }
 
 
@@ -89,17 +88,26 @@ function App() {
     updatedCartData.totalPrice -= meal.price;
 
     setCartData(updatedCartData)
-
-    console.log(updatedCartData);
-    console.log(cartData);
   }
 
+  const claerCartHandler = (meal) => {
+    const updatedCartData = { ...cartData };
+    updatedCartData.items.forEach(items => items.amount = 0);
+    updatedCartData.items = [];
+    updatedCartData.totalAmount = 0;
+    updatedCartData.totalPrice = 0;
+
+    setCartData(updatedCartData)
+  }
+
+  const [FilteredMeal, setFilteredMeal] = useState(MEALS_DATA)
 
   return (
     <>
-      <cartDataContext.Provider value={{ ...cartData, addItemHandler, subItemHandler }}>
-        <Meals MEALS_DATA={MEALS_DATA} />
-        {/* <Cart /> */}
+      <cartDataContext.Provider value={{ ...cartData, addItemHandler, subItemHandler, claerCartHandler }}>
+        <MealFilterBar MEALS_DATA={MEALS_DATA} setFilteredMeal = {setFilteredMeal}/>
+        <Meals MEALS_DATA={FilteredMeal} />
+        <Cart />
       </cartDataContext.Provider>
     </>
   );
