@@ -17,7 +17,6 @@ const CartDetails = () => {
         setShowConfirm(true);
     };
 
-
     const okHandler = () => {
         // 清空购物车
         ctx.claerCartHandler();
@@ -29,7 +28,7 @@ const CartDetails = () => {
     };
 
     return (
-        <Backdrop onClick={cancelHandler}>
+        <Backdrop>
             {showConfirm === true ? <Confirm
                 onOk={okHandler}
                 onCancel={cancelHandler}

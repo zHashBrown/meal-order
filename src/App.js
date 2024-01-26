@@ -72,7 +72,6 @@ function App() {
     }
     updatedCartData.totalAmount += 1;
     updatedCartData.totalPrice += meal.price;
-
     setCartData(updatedCartData)
   }
 
@@ -83,10 +82,8 @@ function App() {
     if (meal.amount === 0) {
       updatedCartData.items.splice(updatedCartData.items.indexOf(meal), 1);
     }
-
     updatedCartData.totalAmount -= 1;
     updatedCartData.totalPrice -= meal.price;
-
     setCartData(updatedCartData)
   }
 
@@ -96,7 +93,6 @@ function App() {
     updatedCartData.items = [];
     updatedCartData.totalAmount = 0;
     updatedCartData.totalPrice = 0;
-
     setCartData(updatedCartData)
   }
 
