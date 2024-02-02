@@ -19,7 +19,7 @@ const CartDetails = () => {
 
     const okHandler = () => {
         // 清空购物车
-        ctx.claerCartHandler();
+        ctx.cartDataDispatch({ type: 'CLEAR' })
     };
 
     const cancelHandler = (e) => {

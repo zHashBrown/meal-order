@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import Meals from "./components/Meals/Meals";
 import cartDataContext from './store/Context'
 import MealFilterBar from "./components/MealFilterBar/MealFilterBar";
@@ -53,55 +53,57 @@ const MEALS_DATA = [
   }
 ];
 
+const cartDataReducer = (state, action) => {
+  const meal = action.meal
+  const updatedCartData = { ...state };
+  switch (action.type) {
+    case 'ADD': {
+      if (updatedCartData.items.indexOf(meal) === -1) {
+        meal.amount = 1;
+        updatedCartData.items.push(meal);
+      } else {
+        meal.amount += 1;
+      }
+      updatedCartData.totalAmount += 1;
+      updatedCartData.totalPrice += meal.price;
+      return updatedCartData
+    }
+    case 'SUB': {
+      meal.amount -= 1;
+      if (meal.amount === 0) {
+        updatedCartData.items.splice(updatedCartData.items.indexOf(meal), 1);
+      }
+      updatedCartData.totalAmount -= 1;
+      updatedCartData.totalPrice -= meal.price;
+      return updatedCartData
+    }
+    case 'CLEAR': {
+      updatedCartData.items.forEach(items => items.amount = 0);
+      updatedCartData.items = [];
+      updatedCartData.totalAmount = 0;
+      updatedCartData.totalPrice = 0;
+      return updatedCartData
+    }
+    default:
+      return state
+  }
+
+}
+
 
 function App() {
 
-  const [cartData, setCartData] = useState({
+  const [cartData, cartDataDispatch] = useReducer(cartDataReducer, {
     totalAmount: 0,
     totalPrice: 0,
     items: []
-  })
-
-  const addItemHandler = (meal) => {
-    const updatedCartData = { ...cartData };
-    if (updatedCartData.items.indexOf(meal) === -1) {
-      meal.amount = 1;
-      updatedCartData.items.push(meal);
-    } else {
-      meal.amount += 1;
-    }
-    updatedCartData.totalAmount += 1;
-    updatedCartData.totalPrice += meal.price;
-    setCartData(updatedCartData)
-  }
-
-
-  const subItemHandler = (meal) => {
-    const updatedCartData = { ...cartData };
-    meal.amount -= 1;
-    if (meal.amount === 0) {
-      updatedCartData.items.splice(updatedCartData.items.indexOf(meal), 1);
-    }
-    updatedCartData.totalAmount -= 1;
-    updatedCartData.totalPrice -= meal.price;
-    setCartData(updatedCartData)
-  }
-
-  const claerCartHandler = (meal) => {
-    const updatedCartData = { ...cartData };
-    updatedCartData.items.forEach(items => items.amount = 0);
-    updatedCartData.items = [];
-    updatedCartData.totalAmount = 0;
-    updatedCartData.totalPrice = 0;
-    setCartData(updatedCartData)
-  }
-
+  });
   const [FilteredMeal, setFilteredMeal] = useState(MEALS_DATA)
 
   return (
     <>
-      <cartDataContext.Provider value={{ ...cartData, addItemHandler, subItemHandler, claerCartHandler }}>
-        <MealFilterBar MEALS_DATA={MEALS_DATA} setFilteredMeal = {setFilteredMeal}/>
+      <cartDataContext.Provider value={{ ...cartData, cartDataDispatch }}>
+        <MealFilterBar MEALS_DATA={MEALS_DATA} setFilteredMeal={setFilteredMeal} />
         <Meals MEALS_DATA={FilteredMeal} />
         <Cart />
       </cartDataContext.Provider>

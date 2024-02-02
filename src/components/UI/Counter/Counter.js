@@ -9,11 +9,11 @@ const Counter = (props) => {
 
     const CartContext = useContext(cartDataContext)
     const addHandler = () => {
-        CartContext.addItemHandler(props.meal);
+        CartContext.cartDataDispatch({ type: 'ADD', meal: props.meal })
     }
 
     const subHandler = () => {
-        CartContext.subItemHandler(props.meal);
+        CartContext.cartDataDispatch({ type: 'SUB', meal: props.meal })
     }
 
     return (
